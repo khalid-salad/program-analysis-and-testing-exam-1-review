@@ -6,10 +6,87 @@
 \maketitle
 \section{Python for PAT} 
 \subsection{Inspecting objects in python}
-\subsection{Magic functions}
-\subsection{Syntactic sugar}
-\subsection{Regular expression}
+Python objects can be inspected with a handful of built-in functions.
+\begin{table}
+\begin{tabular}{l p{10cm}}
+  function & description\\\toprule
+  \mintinline{python}|help| & Invoke the built-in help system\\\cmidrule{2-2}
+  \mintinline{python}|type| & With one argument, return the type of an object\\\cmidrule{2-2}
+  \mintinline{python}|dir| & Without arguments, return the list of names in the current local scope. With an argument, attempt to return a list of valid attributes for that object\\\cmidrule{2-2}
+  \mintinline{python}|id| & Return the “identity” of an object. This is an integer which is guaranteed to be unique and constant for this object during its lifetime.\\\cmidrule{2-2}
+  \mintinline{python}|getattr| & Return the value of the named attribute of object\\\cmidrule{2-2}
+  \mintinline{python}|callable| & Return \mintinline{python}|True| if the object argument appears callable, \mintinline{python}|False| if not.
+\end{tabular}
+\end{table}
 
+\subsection{Magic functions}
+A \emph{Magic Method} is a function (always beginning and ending with \texttt{\textunderscore\textunderscore},
+called a \emph{dunderstore}). Examples are given in \cref{tbl:magic}.
+
+\begin{table}
+\begin{tabular}{l p{10cm}}
+  function & description\\\toprule
+  \mintinline{python}|__new__| & Called to create a new instance of class cls.\\\cmidrule{2-2}
+  \mintinline{python}|__init__| & Called after the instance has been created (by \mintinline{python}|__new__()|), but before it is returned to the caller.\\\cmidrule{2-2}
+  \mintinline{python}|__del__| & Called when the instance is about to be destroyed.\\\cmidrule{2-2}
+  \mintinline{python}|__repr__| & Called by the \mintinline{python}|repr()| built-in function to compute the ``official'' string representation of an object\\\cmidrule{2-2}
+  \mintinline{python}|__str__| & Called by \mintinline{python}|str(object)| and the built-in functions \mintinline{python}|format()| and \mintinline{python}|print()| to compute the ``informal'' or nicely printable string representation of an object.
+\end{tabular}
+\end{table}
+\subsection{Syntactic sugar}
+\emph{Syntactic Sugar} is syntax within a programming language that is designed to make things
+easier to read or to express. For example, a function decorator can be used as shorthand
+for function composition:
+\begin{minted}[linenos]{python}
+@decorator
+def func():
+    # do whatever
+\end{minted}
+is equivalent to
+\begin{minted}[linenos]{python}
+def func(args):
+  # do whatever
+func = decorator(func)
+\end{minted}
+Other examples of syntactic sugar:
+
+Compound inequalities:
+\begin{multicols}{2}
+\begin{minted}[linenos]{python}
+1 < x < 10
+\end{minted}
+\begin{minted}[linenos]{python}
+1 < x and x < 10
+\end{minted}
+\end{multicols}
+List comprehension:
+\begin{multicols}{2}
+\begin{minted}[linenos]{python}
+arr = [x for x in range(10)]
+\end{minted}
+\vfill\null
+\columnbreak
+\begin{minted}[linenos]{python}
+arr = []
+for x in range(10):
+    arr.append(x)
+\end{minted}
+\end{multicols}
+\subsection{Regular expression}
+A \emph{regular expression} is a sequence of characters that specify a search pattern
+in text.
+\begin{minted}[linenos]{python}
+re.findall(r'\bf[a-z]*', 'which foot or hand fell fastest')
+\end{minted}
+\Cref{tbl:regex} gives an outline of regular expression syntax.
+\begin{table}
+\begin{tabular}{l p{10cm}}
+expression & explanation\\\toprule
+\mintinline{python}|.| & (Dot.) In the default mode, this matches any character except a newline. If the \mintinline{python}|DOTALL| flag has been specified, this matches any character including a newline.\\\cmidrule{2-2}
+\mintinline{python}|^| & (Caret.) Matches the start of the string, and in \mintinline{python}|MULTILINE| mode also matches immediately after each newline.\\\cmidrule{2-2}
+\texttt{\$} & Matches the end of the string or just before the newline at the end of the string. 
+\end{tabular}
+\end{table} 
 \section{Concepts and application of concepts in PAT} 
 \subsection{Program Concrete/Abstract/Symbolic State} 
 \subsection{State space} 
