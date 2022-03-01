@@ -7,7 +7,7 @@
 \section{Python for PAT} 
 \subsection{Inspecting objects in python}
 Python objects can be inspected with a handful of built-in functions.
-\begin{table}
+\begin{table}[H]
 \begin{tabular}{l p{10cm}}
   function & description\\\toprule
   \mintinline{python}|help| & Invoke the built-in help system\\\cmidrule{2-2}
@@ -23,7 +23,7 @@ Python objects can be inspected with a handful of built-in functions.
 A \emph{Magic Method} is a function (always beginning and ending with \texttt{\textunderscore\textunderscore},
 called a \emph{dunderstore}). Examples are given in \cref{tbl:magic}.
 
-\begin{table}
+\begin{table}[H]
 \begin{tabular}{l p{10cm}}
   function & description\\\toprule
   \mintinline{python}|__new__| & Called to create a new instance of class cls.\\\cmidrule{2-2}
@@ -79,12 +79,16 @@ in text.
 re.findall(r'\bf[a-z]*', 'which foot or hand fell fastest')
 \end{minted}
 \Cref{tbl:regex} gives an outline of regular expression syntax.
-\begin{table}
+\begin{table}[H]
 \begin{tabular}{l p{10cm}}
 expression & explanation\\\toprule
 \mintinline{python}|.| & (Dot.) In the default mode, this matches any character except a newline. If the \mintinline{python}|DOTALL| flag has been specified, this matches any character including a newline.\\\cmidrule{2-2}
 \mintinline{python}|^| & (Caret.) Matches the start of the string, and in \mintinline{python}|MULTILINE| mode also matches immediately after each newline.\\\cmidrule{2-2}
-\texttt{\$} & Matches the end of the string or just before the newline at the end of the string. 
+\texttt{\$} & Matches the end of the string or just before the newline at the end of the string.\\\cmidrule{2-2}
+\mintinline{python}|*| & Causes the resulting RE to match 0 or more repetitions of the preceding RE\\\cmidrule{2-2}
+\texttt{+} & Causes the resulting RE to match 1 or more repetitions of the preceding RE\\\cmidrule{2-2}
+\texttt{?} & Causes the resulting RE to match 0 or 1 repetitions of the preceding RE.\\\cmidrule{2-2}
+\texttt{[]} & Used to indicate a set of characters
 \end{tabular}
 \end{table} 
 \section{Concepts and application of concepts in PAT} 
@@ -98,12 +102,55 @@ expression & explanation\\\toprule
 \subsection{Satisifiability} 
 
 \section{Control flow graph} 
-\subsection{Basic blocks} 
+A \emph{control flow graph} is a representation, using graph notation, of all paths that might be traversed through a program during its execution.
+\subsection{Basic blocks}
+The \emph{nodes} in the graph correspond to regions of source code. A \emph{basic block} is maximal program region with a single entry and single exit point.
 \subsection{Transitions} 
+The (directed) \emph{edges} of the graph correspond to the possibility that program execution proceeds from the end of one region directly to the beginning of another.
  
-\section{Data flow} 
-\subsection{Def/Use} 
+\section{Data flow}
+\subsection{Def/Use}
+Definition: where a variable gets a value
+\begin{itemize}[nosep]
+    \item Variable declaration  (often the special value “uninitialized”)
+    \item Variable initialization
+    \item Assignment
+    \item Values received by a parameter 
+\end{itemize}
+Use: extraction of a value from a variable
+\begin{itemize}[nosep]
+    \item Expressions
+    \item Conditional statements
+    \item Parameter passing
+    \item Returns
+\end{itemize}
 \subsection{Def-use pairs} 
-\subsection{Def/Use in presence of references} 
+A \emph{def-use} (du) pair associates a point in a program where a value is produced with a point where it is used.
+
+\subsection{Def/Use in presence of references}
 \subsection{Data flow algorithms}
+Suppose we are calculating the reaching definitions of node $v$, and there is an edge $(p, v)$ from an immediate predecessor node $p$.
+\begin{itemize}[nosep]
+    \item If the predecessor node $p$ can assign a value to variable $x$, then the definition $x_p$ reaches $v$.  We say the definition $x_p$ is generated at $p$.
+    \item If a definition $x_p$ of variable $x$ reaches a predecessor node $p$, and if $x$ is not redefined at that node (in which case we say the $x_p$ is killed
+	  at that point), then the definition is propagated on from $p$ to $v$.
+\end{itemize}
+
+Worklist algorithm iterate to a fixed point solution.
+
+General idea: 
+\begin{itemize}
+    \item Initially all nodes are on the work list, and have default values 
+    \item Default for ``any-path'' problem is the empty set, default for ``all-path'' problem is the set of all possibilities (union of all gen sets)
+    \item While the work list is not empty
+    \begin{itemize}
+	    \item Pick any node n on work list; remove it from the list
+        \item Apply the data flow equations for that node to get new values
+        \item If the new value is changed (from the old value at that node), then 
+        \begin{itemize}
+		    \item Add successors (for forward analysis) or predecessors (for backward analysis) on the work list
+		\end{itemize}
+	\end{itemize}
+    \item Eventually the work list will be empty (because new computed values = old values for each node) and the algorithm stops.
+\end{itemize}
 \end{document}
